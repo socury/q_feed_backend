@@ -1,8 +1,9 @@
 package com.example.loginlogic.service;
 
-import com.example.loginlogic.dto.AuthRequest;
-import com.example.loginlogic.dto.AuthResponse;
+import com.example.loginlogic.dto.login.LoginRequest;
+import com.example.loginlogic.dto.login.LoginResponse;
 import com.example.loginlogic.dto.ErrorResponse;
+import com.example.loginlogic.dto.register.RegisterResponse;
 import com.example.loginlogic.entity.UserEntity;
 import com.example.loginlogic.jwt.JwtUtil;
 import com.example.loginlogic.repository.UserRepository;
@@ -26,7 +27,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
 
-    public ResponseEntity<?> joinUser(AuthRequest authRequest) {
+    public ResponseEntity<?> joinUser(LoginRequest authRequest) {
 
         if (userRepository.findByUsername(authRequest.username()).isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("join failed","이미 사용중인 아이디입니다."));
@@ -44,10 +45,10 @@ public class UserService {
 
         userRepository.save(userEntity);
 
-        return ResponseEntity.ok(new AuthResponse("join successful",null));
+        return ResponseEntity.ok(new RegisterResponse("join successful"));
     }
 
-    public ResponseEntity<?> loginUser(AuthRequest authRequest) {
+    public ResponseEntity<?> loginUser(LoginRequest authRequest) {
         UserEntity user = userRepository.findByUsername(authRequest.username())
                 .orElse(null);
 
@@ -61,8 +62,21 @@ public class UserService {
         }
 
         String token = jwtUtil.generateToken(user.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse("login successful",token));
+        return ResponseEntity.ok(new LoginResponse(token, refreshToken, "bearer"));
     }
 
+
+    public ResponseEntity<?> refreshToken(String token) {
+        String username = jwtUtil.extractUsername(token);
+        if (jwtUtil.isTokenValid(token)) {
+            String accessToken = jwtUtil.generateToken(username);
+            String refreshToken = jwtUtil.generateRefreshToken(username);
+
+            return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken, "bearer"));
+        }else{
+            return ResponseEntity.badRequest().body(new ErrorResponse("Token Refresh Failed","Token is not found."));
+        }
+    }
 }

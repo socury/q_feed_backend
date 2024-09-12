@@ -1,0 +1,17 @@
+spring:
+  jwt:
+    secret: qkrdbgustlqkftorlafjspdhtohasldjqtnpasdhisfjashptasdhjtopahsodfhapoishdfo
+  application:
+    name: loginlogic
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/q_feed
+    username: root
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
