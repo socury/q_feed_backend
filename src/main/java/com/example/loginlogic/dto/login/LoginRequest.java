@@ -1,7 +1,6 @@
 package com.example.loginlogic.dto.login;
 
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 public record LoginRequest(
@@ -10,10 +9,8 @@ public record LoginRequest(
         String username,
 
         @NotNull
-        String password,
+        String password
 
-        @Email
-        String email
 ) {
 
 }
