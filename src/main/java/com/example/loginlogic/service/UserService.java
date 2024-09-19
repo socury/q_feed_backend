@@ -3,6 +3,7 @@ package com.example.loginlogic.service;
 import com.example.loginlogic.dto.login.LoginRequest;
 import com.example.loginlogic.dto.login.LoginResponse;
 import com.example.loginlogic.dto.ErrorResponse;
+import com.example.loginlogic.dto.register.RegisterRequest;
 import com.example.loginlogic.dto.register.RegisterResponse;
 import com.example.loginlogic.entity.UserEntity;
 import com.example.loginlogic.jwt.JwtUtil;
@@ -27,20 +28,20 @@ public class UserService {
     private JwtUtil jwtUtil;
 
 
-    public ResponseEntity<?> joinUser(LoginRequest authRequest) {
+    public ResponseEntity<?> joinUser(RegisterRequest registerRequest) {
 
-        if (userRepository.findByUsername(authRequest.username()).isPresent()) {
+        if (userRepository.findByUsername(registerRequest.username()).isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("join failed","이미 사용중인 아이디입니다."));
         }
 
-        if (userRepository.findByEmail(authRequest.email()).isPresent()) {
+        if (userRepository.findByEmail(registerRequest.email()).isPresent()) {
             return ResponseEntity.badRequest().body(new ErrorResponse("join failed","이미 사용중인 이메일입니다."));
         }
 
         UserEntity userEntity = UserEntity.builder()
-                .username(authRequest.username())
-                .password((passwordEncoder.encode(authRequest.password())))
-                .email(authRequest.email())
+                .username(registerRequest.username())
+                .password((passwordEncoder.encode(registerRequest.password())))
+                .email(registerRequest.email())
                 .build();
 
         userRepository.save(userEntity);
@@ -48,8 +49,8 @@ public class UserService {
         return ResponseEntity.ok(new RegisterResponse("join successful"));
     }
 
-    public ResponseEntity<?> loginUser(LoginRequest authRequest) {
-        UserEntity user = userRepository.findByUsername(authRequest.username())
+    public ResponseEntity<?> loginUser(LoginRequest loginRequest) {
+        UserEntity user = userRepository.findByUsername(loginRequest.username())
                 .orElse(null);
 
         if (user == null) {
@@ -57,7 +58,7 @@ public class UserService {
                     .body(new ErrorResponse("login failed", "유저를 찾을 수 없습니다."));
         }
 
-        if (!passwordEncoder.matches(authRequest.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequest.password(), user.getPassword())) {
             return ResponseEntity.badRequest().body(new ErrorResponse("login failed","비밀번호가 일치하지 않습니다."));
         }
 
