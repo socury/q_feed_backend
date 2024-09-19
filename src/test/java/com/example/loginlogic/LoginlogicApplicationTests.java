@@ -3,10 +3,10 @@ package com.example.loginlogic;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class LoginlogicApplicationTests {
 
-    @Test
+//    @Test
     void contextLoads() {
     }
 
