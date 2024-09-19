@@ -2,9 +2,9 @@ package com.example.loginlogic.controller;
 
 import com.example.loginlogic.dto.ErrorResponse;
 import com.example.loginlogic.dto.login.LoginRequest;
+import com.example.loginlogic.dto.register.RegisterRequest;
 import com.example.loginlogic.jwt.JwtUtil;
 import com.example.loginlogic.service.UserService;
-import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +23,8 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public ResponseEntity<?> joinUser(@RequestBody LoginRequest authRequest) {
-        return userService.joinUser(authRequest);
+    public ResponseEntity<?> joinUser(@RequestBody RegisterRequest registerRequest) {
+        return userService.joinUser(registerRequest);
     }
 
     @PostMapping("/login")
