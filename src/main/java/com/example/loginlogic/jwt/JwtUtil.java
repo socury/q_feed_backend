@@ -16,9 +16,9 @@ public class JwtUtil {
     private long expirationMs = 3600000; // 1시간
     private long refreshExpirationMs = 604800000; // 1시간
 
-    public String generateToken(String username) {
+    public String generateToken(String id) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(id)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(SignatureAlgorithm.HS512, secret)
@@ -34,7 +34,7 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractUsername(String token) {
+    public String extractUserid(String token) {
         return extractAllClaims(token).getSubject();
     }
 

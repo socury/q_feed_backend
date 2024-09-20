@@ -62,7 +62,7 @@ public class UserService {
             return ResponseEntity.badRequest().body(new ErrorResponse("login failed","비밀번호가 일치하지 않습니다."));
         }
 
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getId().toString());
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
         return ResponseEntity.ok(new LoginResponse(token, refreshToken, "bearer"));
@@ -70,10 +70,10 @@ public class UserService {
 
 
     public ResponseEntity<?> refreshToken(String token) {
-        String username = jwtUtil.extractUsername(token);
+        String id = jwtUtil.extractUserid(token);
         if (jwtUtil.isTokenValid(token)) {
-            String accessToken = jwtUtil.generateToken(username);
-            String refreshToken = jwtUtil.generateRefreshToken(username);
+            String accessToken = jwtUtil.generateToken(id);
+            String refreshToken = jwtUtil.generateRefreshToken(id);
 
             return ResponseEntity.ok(new LoginResponse(accessToken, refreshToken, "bearer"));
         }else{
