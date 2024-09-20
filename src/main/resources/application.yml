@@ -7,8 +7,8 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/q_feed
-    username: root
-    password: 1234
+    username: dltkddms # 이상은
+    password: dltkddmsqudtls # 이상은병신
 
   jpa:
     hibernate:
