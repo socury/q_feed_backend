@@ -21,3 +21,6 @@ jobs:
           script: |
             cd q_feed_backend
             git pull
+            sh gradlew build
+            cd build/libs
+            java -jar loginlogic-0.0.1-SNAPSHOT.jar
