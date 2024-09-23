@@ -19,6 +19,13 @@ jobs:
           host: ${{ secrets.HOST }} 
           username: ${{ secrets.USER }} 
           script: |
+            PID=$(lsof -t -i:8080)
+            if [ -z "$PID" ]; then
+              echo "No process is running on port 8080"
+            else
+              echo "Killing process $PID"
+              kill -9 $PID
+            fi
             cd q_feed_backend
             git pull
             sh gradlew build
