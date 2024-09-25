@@ -1,11 +1,8 @@
 package com.example.loginlogic.config;
 
-
-
-
+import com.example.loginlogic.jwt.JwtFilter;
 import com.example.loginlogic.jwt.handler.JwtAccessDeniedHandler;
 import com.example.loginlogic.jwt.handler.JwtAuthenticationEntryPoint;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,6 +23,8 @@ public class SecurityConfig {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtFilter jwtFilter;
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -33,6 +33,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors((registry) -> registry.configurationSource(corsConfigurationSource()))
@@ -49,8 +50,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests((configurer) -> configurer
                         .requestMatchers(HttpMethod.POST, "/auth/register", "/auth/login", "/auth/refresh").anonymous()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/main/test").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/test").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user/**").authenticated()
+                        .anyRequest().authenticated()
                 )
+
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .build();
     }
