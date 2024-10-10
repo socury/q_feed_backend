@@ -1,6 +1,7 @@
 package com.example.loginlogic.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -23,5 +24,6 @@ public class UserEntity {
     private String password;
 
     @Column(nullable = false)
+    @Email
     private String email;
 }
